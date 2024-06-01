@@ -1,27 +1,39 @@
 import MenuItem from "./components/MenuItem";
+import OrderContents from "./components/OrderContents";
+import OrderTotals from "./components/OrderTotals";
+import TipPercentageForm from "./components/TipPercentageForm";
 import { menuItems } from "./data/db";
-console.log(menuItems);
+import useOrder from "./hooks/useOrder";
 
 function App() {
+  const { order, addItem, removeItem, tip, setTip, placeOrder } = useOrder();
   return (
     <>
-      <header className="bg-sky-600 py-5">
-        <h1 className="text-center text-4xl font-black">
+      <header className="py-10 bg-sky-600">
+        <h1 className="text-4xl font-black text-center">
           Calculadora de propinas y consumos
         </h1>
       </header>
-      <main className="max-w-7xl mx-auto py-20 grid md:grid-cols-2">
+      <main className="grid py-20 mx-auto max-w-7xl md:grid-cols-2">
         <div className="p-5">
           <h2 className="text-3xl font-bold">Menú</h2>
-          <div className="space-y-2 mt-5">
+          <div className="mt-5 space-y-2">
             {menuItems.map((item) => (
-              <MenuItem key={item.id} item={item} />
+              <MenuItem key={item.id} item={item} addItem={addItem} />
             ))}
           </div>
         </div>
 
-        <div>
-          <h2 className="">Consusmos</h2>
+        <div className="p-5 space-y-10 border rounded-lg border-dashed-slate-300 ">
+          {order.length > 0 ? (
+            <>
+              <OrderContents order={order} removeItem={removeItem} />
+              <TipPercentageForm setTip={setTip} tip={tip} />
+              <OrderTotals order={order} tip={tip} placeOrder={placeOrder} />
+            </>
+          ) : (
+            <p className="text-center">Aún no has ordenado</p>
+          )}
         </div>
       </main>
     </>
